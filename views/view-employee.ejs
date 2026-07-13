@@ -1,0 +1,181 @@
+<%- include('header') %>
+
+<div class="container-scroller">
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+            <div>
+                <a class="navbar-brand brand-logo" href="/dashboard">
+                    <img src="/assets/images/logo.svg" alt="logo" />
+                </a>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-top">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                    <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                        <img class="img-xs rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown">
+                        <div class="dropdown-header text-center">
+                            <img class="img-md rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                            <p class="mb-1 mt-3 fw-semibold"><%= user.name %></p>
+                            <p class="fw-light text-muted mb-0"><%= user.email %></p>
+                        </div>
+                        <a class="dropdown-item" href="/profile">
+                            <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>Profile
+                        </a>
+                        <a class="dropdown-item" href="/change-password">
+                            <i class="dropdown-item-icon mdi mdi-lock-outline text-primary me-2"></i>Change Password
+                        </a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid page-body-wrapper">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#employeeMenu" aria-expanded="true">
+                        <i class="mdi mdi-account-group menu-icon"></i>
+                        <span class="menu-title">Employee</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse show" id="employeeMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/add-employee">Add Employee</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/view-employee">View Employee</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        <i class="mdi mdi-power menu-icon"></i>
+                        <span class="menu-title">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <%- include('flash') %>
+
+                <div class="row">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card card-rounded">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <h4 class="card-title card-title-dash mb-1">All Employees</h4>
+                                        <p class="text-muted mb-0">Total: <strong><%= employees.length %></strong> employees</p>
+                                    </div>
+                                    <a href="/add-employee" class="btn btn-primary">
+                                        <i class="mdi mdi-plus me-1"></i>Add New Employee
+                                    </a>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table select-table align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Photo</th>
+                                                <th>Full Name</th>
+                                                <th>User ID</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Gender</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (employees.length > 0) { %>
+                                                <% employees.forEach((emp, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td>
+                                                    <td>
+                                                        <img src="<%= emp.image !== 'default.jpg' ? '/images/' + emp.image : '/assets/images/faces/face8.jpg' %>"
+                                                            class="rounded-circle"
+                                                            style="width:45px;height:45px;object-fit:cover;border:2px solid #eee;"
+                                                            onerror="this.src='/assets/images/faces/face8.jpg'">
+                                                    </td>
+                                                    <td><h6 class="mb-0"><%= emp.name %></h6></td>
+                                                    <td><span class="text-muted"><%= emp.userId %></span></td>
+                                                    <td><small><%= emp.email %></small></td>
+                                                    <td><small><%= emp.phone %></small></td>
+                                                    <td>
+                                                        <% if (emp.gender === 'Male') { %>
+                                                            <span class="badge badge-opacity-primary">Male</span>
+                                                        <% } else if (emp.gender === 'Female') { %>
+                                                            <span class="badge badge-opacity-danger">Female</span>
+                                                        <% } else { %>
+                                                            <span class="badge badge-opacity-warning"><%= emp.gender %></span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex gap-1">
+                                                            <a href="/edit-employee/<%= emp._id %>"
+                                                                class="btn btn-sm btn-outline-primary" title="Edit">
+                                                                <i class="mdi mdi-pencil"></i>
+                                                            </a>
+                                                            <form action="/delete-employee/<%= emp._id %>" method="POST" style="display:inline;">
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                    title="Delete"
+                                                                    onclick="return confirm('Delete karna chahte ho?')">
+                                                                    <i class="mdi mdi-delete"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="8" class="text-center py-5">
+                                                        <i class="mdi mdi-account-off text-muted" style="font-size:3rem;"></i>
+                                                        <p class="mt-2 text-muted">Koi employee nahi mila</p>
+                                                        <a href="/add-employee" class="btn btn-primary btn-sm">
+                                                            <i class="mdi mdi-plus me-1"></i>Pehla Employee Add Karo
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center">
+                    <span class="text-muted">Admin Panel &copy; 2026. All rights reserved.</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+<script src="/assets/js/off-canvas.js"></script>
+<script src="/assets/js/template.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="/assets/js/hoverable-collapse.js"></script>
+
+<%- include('footer') %>

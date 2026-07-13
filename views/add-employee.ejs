@@ -1,0 +1,174 @@
+<%- include('header') %>
+
+<div class="container-scroller">
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+            <div>
+                <a class="navbar-brand brand-logo" href="/dashboard">
+                    <img src="/assets/images/logo.svg" alt="logo" />
+                </a>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-top">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                    <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                        <img class="img-xs rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown">
+                        <div class="dropdown-header text-center">
+                            <img class="img-md rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                            <p class="mb-1 mt-3 fw-semibold"><%= user.name %></p>
+                            <p class="fw-light text-muted mb-0"><%= user.email %></p>
+                        </div>
+                        <a class="dropdown-item" href="/profile">
+                            <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>Profile
+                        </a>
+                        <a class="dropdown-item" href="/change-password">
+                            <i class="dropdown-item-icon mdi mdi-lock-outline text-primary me-2"></i>Change Password
+                        </a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid page-body-wrapper">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#employeeMenu" aria-expanded="true">
+                        <i class="mdi mdi-account-group menu-icon"></i>
+                        <span class="menu-title">Employee</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse show" id="employeeMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/add-employee">Add Employee</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/view-employee">View Employee</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        <i class="mdi mdi-power menu-icon"></i>
+                        <span class="menu-title">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <%- include('flash') %>
+
+                <div class="row">
+                    <div class="col-md-8 grid-margin stretch-card mx-auto">
+                        <div class="card card-rounded">
+                            <div class="card-body">
+                                <h4 class="card-title card-title-dash mb-4">Add New Employee</h4>
+
+                                <form action="/add-employee" method="POST" enctype="multipart/form-data">
+
+                                    <!-- Profile Image -->
+                                    <div class="text-center mb-4">
+                                        <img id="imgPreview" src="/assets/images/faces/face8.jpg"
+                                            class="rounded-circle mb-2"
+                                            style="width:100px;height:100px;object-fit:cover;border:3px solid #727cf5;">
+                                        <div>
+                                            <label class="btn btn-outline-primary btn-sm mt-2">
+                                                <i class="mdi mdi-camera me-1"></i>Choose Photo
+                                                <input type="file" name="image" accept="image/*"
+                                                    style="display:none;" onchange="previewImage(this)">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label>Full Name</label>
+                                            <input type="text" name="name" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label>User ID</label>
+                                            <input type="text" name="userId" class="form-control" placeholder="e.g. EMP1023" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label>Email</label>
+                                            <input type="email" name="email" class="form-control" placeholder="employee@example.com" required>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label>Phone</label>
+                                            <input type="tel" name="phone" class="form-control" placeholder="e.g. 9876543210" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label>Gender</label>
+                                            <select name="gender" class="form-control" required>
+                                                <option value="" disabled selected>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-primary me-2">
+                                            <i class="mdi mdi-content-save me-1"></i>Save Employee
+                                        </button>
+                                        <a href="/view-employee" class="btn btn-outline-secondary">Cancel</a>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center">
+                    <span class="text-muted">Admin Panel &copy; 2026. All rights reserved.</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('imgPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+<script src="/assets/js/off-canvas.js"></script>
+<script src="/assets/js/template.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="/assets/js/hoverable-collapse.js"></script>
+
+<%- include('footer') %>
