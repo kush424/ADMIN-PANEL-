@@ -1,0 +1,173 @@
+<%- include('../header') %>
+
+<div class="container-scroller">
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+            <div>
+                <a class="navbar-brand brand-logo" href="/dashboard">
+                    <img src="/assets/images/logo.svg" alt="logo" />
+                </a>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-top">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                    <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                        <img class="img-xs rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown">
+                        <div class="dropdown-header text-center">
+                            <img class="img-md rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile">
+                            <p class="mb-1 mt-3 fw-semibold"><%= user.name %></p>
+                            <p class="fw-light text-muted mb-0"><%= user.email %></p>
+                        </div>
+                        <a class="dropdown-item" href="/profile">
+                            <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>Profile
+                        </a>
+                        <a class="dropdown-item" href="/change-password">
+                            <i class="dropdown-item-icon mdi mdi-lock-outline text-primary me-2"></i>Change Password
+                        </a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid page-body-wrapper">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#employeeMenu" aria-expanded="false">
+                        <i class="mdi mdi-account-group menu-icon"></i>
+                        <span class="menu-title">Employee</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="employeeMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="/add-employee">Add Employee</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/view-employee">View Employee</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#categoryMenu" aria-expanded="true">
+                        <i class="mdi mdi-tag-multiple menu-icon"></i>
+                        <span class="menu-title">Category</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse show" id="categoryMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="/add-category">Add Category</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="/view-category">View Category</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        <i class="mdi mdi-power menu-icon"></i>
+                        <span class="menu-title">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <%- include('../flash') %>
+
+                <div class="row">
+                    <div class="col-md-8 grid-margin stretch-card mx-auto">
+                        <div class="card card-rounded">
+                            <div class="card-body">
+                                <h4 class="card-title card-title-dash mb-4">Edit Category</h4>
+
+                                <form action="/edit-category/<%= category._id %>" method="POST" enctype="multipart/form-data">
+
+                                    <!-- Image Preview -->
+                                    <div class="text-center mb-4">
+                                        <img id="imgPreview"
+                                            src="<%= category.image !== 'default.jpg' ? '/images/' + category.image : '/assets/images/faces/face8.jpg' %>"
+                                            class="rounded mb-2"
+                                            style="width:120px;height:120px;object-fit:cover;border:3px solid #727cf5;"
+                                            onerror="this.src='/assets/images/faces/face8.jpg'">
+                                        <div>
+                                            <label class="btn btn-outline-primary btn-sm mt-2">
+                                                <i class="mdi mdi-camera me-1"></i>Change Image
+                                                <input type="file" name="image" accept="image/*"
+                                                    style="display:none;" onchange="previewImage(this)">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Category Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white">
+                                                <i class="mdi mdi-tag-outline text-primary"></i>
+                                            </span>
+                                            <input type="text" name="name" class="form-control"
+                                                value="<%= category.name %>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white">
+                                                <i class="mdi mdi-check-circle-outline text-primary"></i>
+                                            </span>
+                                            <select name="status" class="form-control">
+                                                <option value="Active" <%= category.status === 'Active' ? 'selected' : '' %>>Active</option>
+                                                <option value="Inactive" <%= category.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="mdi mdi-content-save me-2"></i>Update Category
+                                        </button>
+                                        <a href="/view-category" class="btn btn-light btn-lg ms-2">Cancel</a>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center">
+                    <span class="text-muted">Admin Panel &copy; 2026. All rights reserved.</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+<script src="/assets/js/off-canvas.js"></script>
+<script src="/assets/js/template.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="/assets/js/hoverable-collapse.js"></script>
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('imgPreview').src = e.target.result;
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+
+<%- include('../footer') %>

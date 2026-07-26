@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
     username: { type: String, default: '' },
     mobile: { type: String, default: '' },
     gender: { type: String, default: '' },
-    resetOtp: { type: String, default: null },
-    resetOtpExpiry: { type: Date, default: null },
+    role: { type: String, enum: ['Super Admin', 'Admin', 'Manager', 'Employee'], default: 'Admin' },
+    image: { type: String, default: 'default.jpg' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
